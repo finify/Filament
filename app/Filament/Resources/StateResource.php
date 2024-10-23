@@ -13,11 +13,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+//using select
+use Filament\Forms\Components\Select;
+
 class StateResource extends Resource
 {
     protected static ?string $model = State::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
     protected static ?string $navigationLabel = 'State';
 
@@ -34,9 +37,13 @@ class StateResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('country_id')
+                Select::make('country_id')
+                    ->relationship(name: 'country',titleAttribute: 'name')
                     ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->preload()
+                    // ->multiple()
+                    ->native(true),
             ]);
     }
 
@@ -46,7 +53,7 @@ class StateResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('country_id')
+                Tables\Columns\TextColumn::make('country.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

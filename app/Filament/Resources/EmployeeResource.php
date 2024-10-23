@@ -15,11 +15,23 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Forms\Components\Section;
 
+//using select
+use Filament\Forms\Components\Select;
+
+use Illuminate\Support\Collection;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+
+use App\Models\State;
+use App\Models\City;
+
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    
 
     public static function form(Form $form): Form
     {
@@ -41,25 +53,62 @@ class EmployeeResource extends Resource
                         ->required()
                         ->maxLength(255),
                 ])->columns(3),
+                Section::make('User Address')
+                ->description('Input User Address Details ')
+                ->schema([
+                    Select::make('country_id')
+                    ->relationship(name: 'country',titleAttribute: 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    // ->multiple()
+                    ->live()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('state_id', null);
+                        $set('city_id', null);
+                        }
+                    )
+                    ->native(true),
                 
-                Forms\Components\TextInput::make('address')
+                    Select::make('state_id')
+                    ->options(fn(Get $get):Collection=> State::query()
+                        ->where('country_id', $get('country_id'))
+                        ->pluck('name', 'id'))
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('zip_code')
+                    ->searchable()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('city_id', null);
+                    })
+                    ->preload()
+                    ->live()
+                    // ->multiple()
+                    ->native(true),
+                    Select::make('city_id')
+                    ->options(fn(Get $get):Collection=> City::query()
+                        ->where('state_id', $get('state_id'))
+                        ->pluck('name', 'id'))
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('country_id')
+                    ->searchable()
+                    ->preload()
+                    // ->multiple()
+                    ->native(true),
+                    Forms\Components\TextInput::make('address')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('zip_code')
+                        ->required()
+                        ->maxLength(255),
+
+                ])->columns(2),
+                
+                
+                Select::make('department_id')
+                    ->relationship(name: 'department',titleAttribute: 'name')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('state_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('city_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('department_id')
-                    ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->preload()
+                    // ->multiple()
+                    ->native(true),
                 Forms\Components\DatePicker::make('date_hired')
                     ->required(),
                 Forms\Components\DatePicker::make('date_resigned'),

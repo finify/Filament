@@ -13,6 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+//using select
+use Filament\Forms\Components\Select;
+
 class CityResource extends Resource
 {
     protected static ?string $model = City::class;
@@ -34,9 +37,12 @@ class CityResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('state_id')
+                Select::make('state_id')
+                    ->relationship(name: 'state',titleAttribute: 'name')
                     ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->preload()
+                    // ->multiple()
             ]);
     }
 
