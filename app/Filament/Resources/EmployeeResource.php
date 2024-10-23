@@ -127,34 +127,39 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('last_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('middle_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('zip_code')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('country_id')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('country.name')
+                    ->sortable()
+                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('state.name')
+                    ->sortable()
+                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('city.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('state_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('city_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('department_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('department.name')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_hired')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_resigned')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
